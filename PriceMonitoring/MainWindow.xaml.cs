@@ -40,11 +40,12 @@ namespace PriceMonitoring
         public MainWindow()
         {
             InitializeComponent();
-            Products = new ObservableCollection<Product>() {
-            new Product() { Number = 1, NameProduct = "3", CreateDate = new DateTime(2023, 2, 15), Price = 20 },
-            new Product() { Number = 1, NameProduct = "3", CreateDate = new DateTime(2023, 2, 16), Price = 23 },
-            new Product() { Number = 2, NameProduct = "1", CreateDate = DateTime.Now, Price = 21 },
-            new Product() { Number = 3, NameProduct = "4", CreateDate = DateTime.Now, Price = 33 }};
+            Products = new ObservableCollection<Product>();
+            //Products = new ObservableCollection<Product>() {
+            //new Product() { Number = 1, NameProduct = "3", CreateDate = new DateTime(2023, 2, 15), Price = 20 },
+            //new Product() { Number = 1, NameProduct = "3", CreateDate = new DateTime(2023, 2, 16), Price = 23 },
+            //new Product() { Number = 2, NameProduct = "1", CreateDate = DateTime.Now, Price = 21 },
+            //new Product() { Number = 3, NameProduct = "4", CreateDate = DateTime.Now, Price = 33 }};
             ListProduct.ItemsSource = Products;
 
 
