@@ -1,28 +1,14 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Forms;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
 using Path = System.IO.Path;
 using MessageBox = System.Windows.Forms.MessageBox;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using System.Diagnostics.Metrics;
 using System.ComponentModel;
-using Microsoft.VisualBasic.ApplicationServices;
 
 namespace PriceMonitoring
 {
@@ -51,16 +37,21 @@ namespace PriceMonitoring
 
         }
 
-        private void ListProduct_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
 
-        }
-
+        /// <summary>
+        /// Зміна шляху при прописі його вручну
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PathToFileCanged(object sender, TextChangedEventArgs e)
         {
             PathToFile = PathToFileTextBox.Text;
         }
-
+        /// <summary>
+        /// Пошук вже готового файлу
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OpenToFilePath(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -83,7 +74,11 @@ namespace PriceMonitoring
             }
         }
 
-
+        /// <summary>
+        /// Отримання даних з файлу
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void GetDataButton(object sender, RoutedEventArgs e)
         {
             if (!String.IsNullOrEmpty(PathToFile))
@@ -102,7 +97,11 @@ namespace PriceMonitoring
             }
 
         }
-
+        /// <summary>
+        /// Збереження даних у новий файл або перезапис вже існуючого
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SaveDataButton(object sender, RoutedEventArgs e)
         {
             List<string> StrWriteData = new List<string>();
@@ -121,7 +120,11 @@ namespace PriceMonitoring
                 }
             }
         }
-
+        /// <summary>
+        /// Додавання нового поля в таблиці і заповнення його
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AddNewProductButton(object sender, RoutedEventArgs e)
         {
             int NewNumber = 0;
@@ -132,7 +135,11 @@ namespace PriceMonitoring
 
             Products.Add(new Product() { Number = NewNumber + 1, NameProduct = "", CreateDate = DateTime.Now, Price = 0 });
         }
-
+        /// <summary>
+        /// сортування по назві товару і якщо є декілька цін на нього тоді щей по даті
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SortByNameButton(object sender, RoutedEventArgs e)
         {
 
@@ -140,13 +147,22 @@ namespace PriceMonitoring
             view.SortDescriptions.Add(new SortDescription("NameProduct", ListSortDirection.Ascending));
             view.SortDescriptions.Add(new SortDescription("CreateDate", ListSortDirection.Ascending));
         }
-
+        /// <summary>
+        /// Пошук продуктів по обраному дню
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SerchFromDateTime(object sender, RoutedEventArgs e)
         {
             view = (CollectionView)CollectionViewSource.GetDefaultView(ListProduct.ItemsSource);
             view.Filter = UserFilter;
             CollectionViewSource.GetDefaultView(ListProduct.ItemsSource).Refresh();
         }
+       /// <summary>
+       /// Фільтр який виконує відбір по даті (не потрібні дані просто приховуються)
+       /// </summary>
+       /// <param name="item"></param>
+       /// <returns></returns>
         private bool UserFilter(object item)
         {
             if (String.IsNullOrEmpty(DateFromSerch.ToString("MM/dd/yyyy")))
@@ -154,17 +170,29 @@ namespace PriceMonitoring
             else
                 return ((item as Product).CreateDate.ToString("MM/dd/yyyy").IndexOf(DateFromSerch.ToString("MM/dd/yyyy"), StringComparison.OrdinalIgnoreCase) >= 0);
         }
-
+        /// <summary>
+        /// Відключення фільтра для показу всіх товарів (відміна пошуку по даті)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CencelSerchFromDateTime(object sender, RoutedEventArgs e)
         {
             view.Filter = null;
         }
-
+        /// <summary>
+        /// Зміна цін на товар за місяць від заданої дати
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PriceChangePerMonth(object sender, RoutedEventArgs e)
         {
             CalculateChangePrice(31);
 
         }
+        /// <summary>
+        /// Обчислення зміни ціна на товар по заданим дням
+        /// </summary>
+        /// <param name="NumberOfDays">Кількість днів для глибини пошуку</param>
         private void CalculateChangePrice(int NumberOfDays)
         {
             ObservableCollection<Product> products = new ObservableCollection<Product>();
@@ -198,11 +226,20 @@ namespace PriceMonitoring
             }
             ListProduct.ItemsSource = products;
         }
+        /// <summary>
+        /// Зміна цін на товар за рік від заданої дати
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PriceIncreaseForTheYear(object sender, RoutedEventArgs e)
         {
             CalculateChangePrice(365);
         }
-
+        /// <summary>
+        /// Відміна обрахування цін
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CencelChangePrice(object sender, RoutedEventArgs e)
         {
             ListProduct.ItemsSource = Products;
@@ -210,13 +247,34 @@ namespace PriceMonitoring
     }
 
 }
+/// <summary>
+/// Клас для заповнення даних
+/// </summary>
 public class Product
 {
+    /// <summary>
+    /// Номер товару
+    /// </summary>
     public int Number { get; set; }
+    /// <summary>
+    /// Назва товару
+    /// </summary>
     public string NameProduct { get; set; }
+    /// <summary>
+    /// Дата заведення ціни на товар
+    /// </summary>
     public DateTime CreateDate { get; set; }
+    /// <summary>
+    /// Ціна на товар
+    /// </summary>
     public double Price { get; set; }
+    /// <summary>
+    /// Абсолютна зміна ціни за період
+    /// </summary>
     public double PriceChange { get; set; } = 0;
+    /// <summary>
+    /// Відсоток зміни ціни за період
+    /// </summary>
     public double PercentageIncreasePrice { get; set; } = 0;
 
 }

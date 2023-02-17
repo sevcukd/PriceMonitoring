@@ -55,7 +55,7 @@
                 <TextBlock Text="Відмінити"/>
             </Button>
         </StackPanel>
-        <ListView  x:Name="ListProduct" SelectionChanged="ListProduct_SelectionChanged"
+        <ListView  x:Name="ListProduct" 
                      Grid.Row="1" Grid.Column="0"  >
             <ListView.View>
                 <GridView >
